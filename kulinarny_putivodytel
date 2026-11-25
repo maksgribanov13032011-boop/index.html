@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Кулинарный путеводитель: Еда как язык культуры</title>
+<style>
+  :root {
+    --bg: #fdfbf7;
+    --card-bg: #ffffff;
+    --primary: #d9534f;
+    --secondary: #2c3e50;
+    --accent: #e67e22;
+    --text: #333333;
+    --muted: #666666;
+    --border: #eaeaea;
+    --success: #27ae60;
+    --danger: #c0392b;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  header {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: #fff;
+    padding: 3rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  header h1 {
+    font-size: 2.4rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.5px;
+  }
+
+  header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    max-width: 700px;
+    margin: 0 auto 1.2rem;
+  }
+
+  .author-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+  }
+
+  nav {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    background: #fff;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-wrap: wrap;
+  }
+
+  .nav-btn {
+    padding: 0.6rem 1.4rem;
+    border: 2px solid var(--secondary);
+    background: transparent;
+    color: var(--secondary);
+    border-radius: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.95rem;
+  }
+
+  .nav-btn.active, .nav-btn:hover {
+    background: var(--secondary);
+    color: #fff;
+  }
+
+  .container {
+    max-width: 1050px;
+    margin: 2rem auto;
+    padding: 0 1.5rem;
+  }
+
+  .section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .section.active {
+    display: block;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    color: var(--secondary);
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .section-subtitle {
+    text-align: center;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+
+  /* Карточки стран и блюд */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card {
+    background: var(--card-bg);
+    border-radius: 14px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    border: 1px solid var(--border);
+    transition: transform 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.8rem;
+  }
+
+  .emoji-icon {
+    font-size: 2.4rem;
+  }
+
+  .card-title h3 {
+    font-size: 1.25rem;
+    color: var(--secondary);
+  }
+
+  .card-title span {
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .tag {
+    display: inline-block;
+    background: #f0f4f8;
+    color: var(--secondary);
+    padding: 0.2rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+  }
+
+  .card p {
+    font-size: 0.95rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .rule-box {
+    padding: 0.7rem 0.9rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    margin-top: 0.6rem;
+  }
+
+  .rule-do {
+    background: #eafaf1;
+    border-left: 4px solid var(--success);
+    color: #1e8449;
+  }
+
+  .rule-dont {
+    background: #fdedec;
+    border-left: 4px solid var(--danger);
+    color: #922b21;
+  }
+
+  /* Золотые правила */
+  .golden-rules {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .rule-card {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-top: 5px solid var(--accent);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  .rule-num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 0.4rem;
+  }
+
+  .rule-card h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--secondary);
+  }
+
+  /* Интерактивный тест */
+  .quiz-box {
+    background: #fff;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+    border: 1px solid var(--border);
+  }
+
+  .quiz-question {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    color: var(--secondary);
+  }
+
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .option-btn {
+    padding: 0.9rem 1.2rem;
+    text-align: left;
+    border: 2px solid var(--border);
+    background: #fafafa;
+    border-radius: 10px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    border-color: var(--secondary);
+    background: #f0f4f8;
+  }
+
+  .option-btn.correct {
+    background: #d4efdf;
+    border-color: var(--success);
+    color: #145a32;
+    font-weight: 600;
+  }
+
+  .option-btn.wrong {
+    background: #fadbd8;
+    border-color: var(--danger);
+    color: #78281f;
+  }
+
+  .quiz-feedback {
+    margin-top: 1.2rem;
+    padding: 1rem;
+    border-radius: 8px;
+    background: #f8f9fa;
+    display: none;
+  }
+
+  .next-btn {
+    margin-top: 1.2rem;
+    padding: 0.7rem 1.6rem;
+    background: var(--secondary);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: none;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    margin-top: 3rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🌍 Кулинарный путеводитель: Еда как язык культуры</h1>
+  <p>Интерактивный справочник скрытых культурных смыслов национальных блюд и правил гастрономического этикета разных народов мира</p>
+  <div class="author-badge">Проект ученика 9А класса Грибанова Максима • МБОУ СОШ №19 г. Иркутска</div>
+</header>
+
+<nav>
+  <button class="nav-btn active" onclick="showTab('guide', this)">🍽️ Атлас кухонь и этикета</button>
+  <button class="nav-btn" onclick="showTab('rules', this)">📜 4 «Золотых» правила</button>
+  <button class="nav-btn" onclick="showTab('quiz', this)">🧠 Проверь себя (Тест)</button>
+</nav>
+
+<div class="container">
+
+  <!-- РАЗДЕЛ 1: АТЛАС КУХОНЬ -->
+  <div id="guide" class="section active">
+    <h2 class="section-title">Культурные коды в блюдах народов мира</h2>
+    <p class="section-subtitle">Узнайте, что скрывают привычные блюда и как правильно есть их, чтобы не обидеть традиции</p>
+
+    <div class="grid">
+      <!-- Россия -->
+      <div class="card">
+        <div class="card-header">
+          <div class="emoji-icon">🥞</div>
+          <div class="card-title">
+            <span>Россия</span>
+            <h3>Блины и каравай</h3>
+          </div>
+        </div>
+        <div class="tag">Код: Ритуальные и общинные блюда</div>
+        <p><strong>Скрытый смысл:</strong> Круглый золотистый блин — древний символ солнца, тепла и прихода весны на Масленицу. Хлеб-соль при встрече гостей символизирует высшее доверие и открытость дома.</p>
+        <div class="rule-box rule-do"><strong>Как правильно:</strong> На Масленицу блины традиционно едят руками, складывая конвертиком или трубочкой.</div>
+        <div class="rule-box rule-dont"><strong>Частая ошибка:</strong> Отказ от угощения хозяев в русской традиции воспринимается как проявление неуважения к дому.</div>
+      </div>
+
+      <!-- Япония -->
+      <div class="card">
+        <div class="card-header">
+          <div class="emoji-icon">🍣</div>
+          <div class="card-title">
+            <span>Япония</span>
+            <h3>Суши и искусство палочек</h3>
+          </div>
+        </div>
+        <div class="tag">Код: Философия гармонии и уважения</div>
+        <p><strong>Скрытый смысл:</strong> Японская кухня ценит естественный вкус продукта и эстетику подачи. Популярные роллы «Калифорния» — это западная адаптация, а не классика Японии.</p>
+        <div class="rule-box rule-do"><strong>Как правильно:</strong> Окунайте суши в соевый соус стороной с рыбой, а не рисом, чтобы он не развалился.</div>
+        <div class="rule-box rule-dont"><strong>Частая ошибка:</strong> Нельзя втыкать палочки вертикально в рис — в Японии это ритуальный жест на поминках.</div>
+      </div>
+
+      <!-- Грузия -->
+      <div class="card">
+        <div class="card-header">
+          <div class="emoji-icon">🥟</div>
+          <div class="card-title">
+            <span>Грузия</span>
+            <h3>Хинкали и застолье</h3>
+          </div>
+        </div>
+        <div class="tag">Код: Семейные и общинные ритуалы</div>
+        <p><strong>Скрытый смысл:</strong> Грузинское застолье (супра) во главе с тамадой — это целый ритуал общения, уважения к старшим и братства. Складки на хинкали символизируют солнечные лучи.</p>
+        <div class="rule-box rule-do"><strong>Как правильно:</strong> Берите хинкали руками за плотный хвостик, надкусите край и сначала выпейте горячий бульон.</div>
+        <div class="rule-box rule-dont"><strong>Частая ошибка:</strong> Не используйте вилку и нож (вытечет весь сок) и не ешьте хвостик — по ним считают, кто сколько съел.</div>
+      </div>
+
+      <!-- Италия -->
+      <div class="card">
+        <div class="card-header">
+          <div class="emoji-icon">🍝</div>
+          <div class="card-title">
+            <span>Италия</span>
+            <h3>Паста и кулинарные каноны</h3>
+          </div>
+        </div>
+        <div class="tag">Код: Национальная гордость и традиции</div>
+        <p><strong>Скрытый смысл:</strong> Для итальянцев еда — основа семейной жизни и объект строгих исторических правил, где у каждого региона есть своя форма пасты и свой соус.</p>
+        <div class="rule-box rule-do"><strong>Как правильно:</strong> Наматывайте спагетти на вилку у края тарелки без использования столовой ложки.</div>
+        <div class="rule-box rule-dont"><strong>Частая ошибка:</strong> Никогда не просите тертый пармезан к пасте с морепродуктами — для повара это оскорбление.</div>
+      </div>
+
+      <!-- Китай -->
+      <div class="card">
+        <div class="card-header">
+          <div class="emoji-icon">🥮</div>
+          <div class="card-title">
+            <span>Китай</span>
+            <h3>Лунные пряники и общий стол</h3>
+          </div>
+        </div>
+        <div class="tag">Код: Ритуальные блюда и единство</div>
+        <p><strong>Скрытый смысл:</strong> Круглые пряники (юэбины) дарят на Праздник середины осени как символ воссоединения семьи. Еда в Китае ставится в центр на вращающийся поднос для всех сразу.</p>
+        <div class="rule-box rule-do"><strong>Как правильно:</strong> Накладывайте еду с общих блюд обратной стороной палочек или специальными общими приборами.</div>
+        <div class="rule-box rule-dont"><strong>Частая ошибка:</strong> Не стучите палочками по краю пиалы — так в древности делали только нищие, просящие милостыню.</div>
+      </div>
+
+      <!-- Статусные продукты -->
+      <div class="card">
+        <div class="card-header">
+          <div class="emoji-icon">🥂</div>
+          <div class="card-title">
+            <span>Мировая культура</span>
+            <h3>Статусные продукты</h3>
+          </div>
+        </div>
+        <div class="tag">Код: Социальный статус и престиж</div>
+        <p><strong>Скрытый смысл:</strong> Чёрная икра, трюфели или редкие сорта чая исторически служили «языком статуса», демонстрируя высокий достаток хозяина и особое уважение к дорогим гостям.</p>
+        <div class="rule-box rule-do"><strong>Как правильно:</strong> Чёрную икру подают на льду и берут специальной перламутровой или костяной ложечкой.</div>
+        <div class="rule-box rule-dont"><strong>Частая ошибка:</strong> Использование обычной металлической ложки окисляет икру и портит её настоящий вкус.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 2: ЗОЛОТЫЕ ПРАВИЛА -->
+  <div id="rules" class="section">
+    <h2 class="section-title">Свод 4 «Золотых» правил гастрономического этикета</h2>
+    <p class="section-subtitle">Простые рекомендации из нашего исследования, которые защитят вас от неловких ситуаций в любой стране</p>
+
+    <div class="golden-rules">
+      <div class="rule-card">
+        <div class="rule-num">01</div>
+        <h4>Изучай правила заранее</h4>
+        <p>Перед походом в национальный ресторан или поездкой в другую страну узнай базовые правила: едят ли это блюдо руками, какие приборы используют и какие существуют религиозные запреты (табу).</p>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-num">02</div>
+        <h4>Отличай оригинал от копии</h4>
+        <p>Многие популярные блюда в доставках адаптированы под местный вкус. Интересуйся настоящей историей рецептов, чтобы понимать подлинную культуру народа, а не ресторанный маркетинг.</p>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-num">03</div>
+        <h4>Наблюдай и спрашивай</h4>
+        <p>Если не знаешь, как правильно есть незнакомое экзотическое блюдо — не спеши. Посмотри, как это делают местные жители или хозяева стола, либо вежливо спроси совета у официанта.</p>
+      </div>
+
+      <div class="rule-card">
+        <div class="rule-num">04</div>
+        <h4>Уважай традиции хозяев</h4>
+        <p>Забудь принцип «раз я заплатил, ем как хочу». За столом в чужой культуре еда — это диалог. Соблюдение этикета показывает твоё уважение к истории и труду людей.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- РАЗДЕЛ 3: ИНТЕРАКТИВНЫЙ ТЕСТ -->
+  <div id="quiz" class="section">
+    <h2 class="section-title">Интерактивная проверка знаний</h2>
+    <p class="section-subtitle">Проверьте, насколько свободно вы владеете «языком» мировой кухни</p>
+
+    <div class="quiz-box">
+      <div id="quiz-content">
+        <div class="quiz-question" id="q-text">Загрузка вопроса...</div>
+        <div class="quiz-options" id="q-options"></div>
+        <div class="quiz-feedback" id="q-feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">Следующий вопрос ➔</button>
+      </div>
+      <div id="quiz-result" style="display:none; text-align:center;">
+        <h3 style="font-size:1.5rem; color:var(--secondary); margin-bottom:0.8rem;">Тест завершён!</h3>
+        <p id="score-text" style="font-size:1.1rem; margin-bottom:1.5rem;"></p>
+        <button class="nav-btn active" onclick="restartQuiz()">Пройти ещё раз</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Проектный продукт к исследовательской работе «Еда — как язык культуры» • 2026 год
+</footer>
+
+<script>
+  function showTab(tabId, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  const questions = [
+    {
+      q: "1. Почему в странах Азии категорически запрещено втыкать палочки вертикально в чашку с рисом?",
+      options: [
+        "Так палочки могут сломаться",
+        "Это ассоциируется с поминальным ритуалом и похоронами",
+        "Это знак того, что еда невкусная"
+      ],
+      correct: 1,
+      info: "Верно! В буддийской традиции вертикально воткнутые в рис палочки напоминают благовония, которые ставят на алтарь для умерших."
+    },
+    {
+      q: "2. Какая грубая ошибка при заказе пасты в Италии считается оскорблением шеф-повара?",
+      options: [
+        "Попросить тёртый сыр пармезан к пасте с морепродуктами",
+        "Есть спагетти без помощи ложки",
+        "Заказать пасту на ужин, а не на обед"
+      ],
+      correct: 0,
+      info: "Правильно! В итальянской кулинарной культуре сыр и морепродукты считаются несовместимыми, так как сыр перебивает тонкий вкус даров моря."
+    },
+    {
+      q: "3. Как по правилам этикета нужно есть грузинские хинкали?",
+      options: [
+        "Разрезать ножом и есть вилкой, включая хвостик",
+        "Взять руками за хвостик, надкусить, выпить бульон, а хвостик оставить на тарелке",
+        "Наколоть на вилку целиком и обмакнуть в майонез"
+      ],
+      correct: 1,
+      info: "Отлично! Хвостик из плотного теста служит только как «ручка», чтобы не обжечь пальцы и не пролить драгоценный бульон."
+    },
+    {
+      q: "4. Какой процент людей, согласно исследованиям, ошибочно принимает адаптированные зарубежные блюда за оригинальные национальные?",
+      options: [
+        "Около 15%",
+        "Более 60%",
+        "Ровно 95%"
+      ],
+      correct: 1,
+      info: "Верно! По данным статистики из нашего исследования, более 60% людей путают адаптированные блюда (вроде роллов «Калифорния») с аутентичной кухней."
+    }
+  ];
+
+  let currentQ = 0;
+  let score = 0;
+
+  function loadQuestion() {
+    const q = questions[currentQ];
+    document.getElementById('q-text').innerText = q.q;
+    const optionsDiv = document.getElementById('q-options');
+    optionsDiv.innerHTML = '';
+    document.getElementById('q-feedback').style.display = 'none';
+    document.getElementById('next-btn').style.display = 'none';
+
+    q.options.forEach((opt, index) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.innerText = opt;
+      btn.onclick = () => checkAnswer(index, btn);
+      optionsDiv.appendChild(btn);
+    });
+  }
+
+  function checkAnswer(selected, btn) {
+    const q = questions[currentQ];
+    const allBtns = document.querySelectorAll('.option-btn');
+    allBtns.forEach(b => b.disabled = true);
+
+    const feedback = document.getElementById('q-feedback');
+    feedback.style.display = 'block';
+
+    if (selected === q.correct) {
+      btn.classList.add('correct');
+      score++;
+      feedback.innerHTML = "✅ " + q.info;
+    } else {
+      btn.classList.add('wrong');
+      allBtns[q.correct].classList.add('correct');
+      feedback.innerHTML = "❌ Не совсем так. " + q.info;
+    }
+
+    document.getElementById('next-btn').style.display = 'inline-block';
+  }
+
+  function nextQuestion() {
+    currentQ++;
+    if (currentQ < questions.length) {
+      loadQuestion();
+    } else {
+      document.getElementById('quiz-content').style.display = 'none';
+      document.getElementById('quiz-result').style.display = 'block';
+      document.getElementById('score-text').innerText = `Вы ответили правильно на ${score} из ${questions.length} вопросов!`;
+    }
+  }
+
+  function restartQuiz() {
+    currentQ = 0;
+    score = 0;
+    document.getElementById('quiz-content').style.display = 'block';
+    document.getElementById('quiz-result').style.display = 'none';
+    loadQuestion();
+  }
+
+  loadQuestion();
+</script>
+</body>
+</html>
